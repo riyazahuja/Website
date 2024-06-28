@@ -1,3 +1,8 @@
+/* Tailwind CSS imports */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +15,100 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+body.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+.left-sidebar, .right-sidebar {
+  width: 60px; /* Make the sidebars skinnier */
+  height: 100vh; /* Full height of the viewport */
+  position: fixed;
+  top: 0;
+}
+
+.left-sidebar {
+  left: 0;
+}
+
+.right-sidebar {
+  right: 0;
+}
+
+.main-content {
+  margin-left: 60px; /* Adjust for left sidebar */
+  margin-right: 60px; /* Adjust for right sidebar */
+  width: calc(100% - 120px); /* Adjust for sidebars */
+}
+
+.hover-info {
+  width: 100%; /* Adjust for sidebars */
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0);
+  color: white;
+  z-index: 10;
+  padding: 0.3rem;
+}
+
+.hover-info.top {
+  top: 0;
+}
+
+.hover-info.bottom {
+  bottom: 0;
+}
+
+.hover-info.top .hover-info-content {
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  animation: marquee-right 10s linear infinite;
+  padding-right: 100%;
+}
+
+.hover-info.bottom .hover-info-content {
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  animation: marquee-left 10s linear infinite;
+  padding-right: 100%;
+}
+
+.hover-info-content-2 {
+  animation-delay: 5s;
+}
+
+.hover-info-item {
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+.separator {
+  margin-left: 1rem;
+}
+
+@keyframes marquee-right {
+  0% {
+    transform: translate(-100%, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes marquee-left {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100%, 0);
+  }
 }
