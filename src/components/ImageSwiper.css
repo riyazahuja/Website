@@ -1,0 +1,78 @@
+.swiper-container {
+    width: 100%; /* Use 100% width to fit within the main content area */
+    height: fit-content; /* Use 100% height to fit within the main content area */
+    background: none;
+    margin: 0 auto;
+    overflow: hidden;
+    position: absolute; /* Use absolute positioning */
+    bottom: 0;
+  }
+  
+  .swiper-wrapper {
+    display: flex;
+    align-items: flex-end;
+  }
+  
+  .swiper-slide {
+    display: flex;
+    align-items: flex-end;
+    width: auto;
+    max-width: 300px; /* Ensure max-width does not cause overflow */
+    margin-right: 16px; /* Add margin between slides */
+  }
+  
+  .swiper-slide img {
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - 250px); /* Ensure image height fits within viewport */
+    border-radius: 8px;
+  }
+  
+  .projectInfo {
+    position: relative;
+    margin: 14px 0 13px 0;
+    text-transform: uppercase;
+  }
+  
+  .projectInfo h2 {
+    margin: 0;
+    font-size: 1rem; /* Adjust font size */
+  }
+  
+  .projectInfo h2.light-mode {
+    color: #2E242A; /* Light mode text color */
+  }
+  
+  .projectInfo h2.dark-mode {
+    color: #F7F3E3; /* Dark mode text color */
+  }
+  
+  .thumbContainer {
+    opacity: 1;
+    transform: translateY(60%);
+    transition: transform 0.5s;
+  }
+  
+  .thumbContainer img,
+  .thumbContainer video {
+    display: block;
+    position: relative;
+    width: 100%; /* Adjust to fit within container */
+    height: auto;
+  }
+  
+  .fadeInSlide {
+    animation-name: fadeInSlide;
+    animation-duration: 1.5s;
+    animation-timing-function: cubic-bezier(1, 0.055, 0.32, 1);
+    animation-fill-mode: forwards;
+  }
+  
+  @keyframes fadeInSlide {
+    0% {
+      transform: translateY(60%);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }

@@ -8,20 +8,25 @@ const LeftSidebar = () => {
   const getPageName = (path) => {
     switch (path) {
       case '/':
-        return 'Home';
+        return 'HOME';
       case '/projects':
-        return 'Projects';
+        return 'PROJECTS';
       case '/resume':
-        return 'Resume';
+        return 'RESUME';
       case '/writing':
-        return 'Writing';
+        return 'WRITING';
+      case '/info':
+        return 'INFO';
       default:
-        return path.split('/').filter(Boolean).join(' / ');
+        const raw = path.split('/').filter(Boolean).join(' / ')
+        return raw.split(" ").map((word) => { 
+          return word.toUpperCase(); 
+      }).join(" ");
     }
   };
 
   return (
-    <div className="left-sidebar bg-gray-800 text-white h-full flex items-center">
+    <div className="left-sidebar h-full flex items-center justify-center">
       <p className="transform -rotate-90 origin-center whitespace-nowrap text-lg">
         {getPageName(currentPath)}
       </p>

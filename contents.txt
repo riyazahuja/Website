@@ -1,0 +1,1440 @@
+File: App.js
+Contents:
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import HomePage from './components/HomePage';
+import ProjectsPage from './components/ProjectsPage';
+import ResumePage from './components/ResumePage';
+import InfoPage from './components/InfoPage';
+import WritingPage from './components/WritingPage';
+import ProjectDataPage from './components/ProjectDataPage';
+import PostDataPage from './components/PostDataPage';
+import LeftSidebar from './components/LeftSidebar';
+import RightSidebar from './components/RightSidebar';
+import CanvasAnimation from './components/CanvasAnimation';
+
+function App() {
+    const [hoverInfo, setHoverInfo] = useState([]);
+    const [darkMode, setDarkMode] = useState(false);
+
+    const location = useLocation();
+
+    useEffect(() => {
+        switch (location.pathname) {
+            case '/projects':
+                setHoverInfo(["Projects!"]);
+                break;
+            case '/resume':
+                setHoverInfo(["Resume"]);
+                break;
+            case '/writing':
+                setHoverInfo(["Writing"]);
+                break;
+            case '/info':
+                setHoverInfo(["This is the info page", "This is the second element of the info page", "This is the third element of the info page"]);
+                break;
+            default:
+                setHoverInfo(["Hello my name is Riyaz Ahuja and this is my website!"]);
+        }
+    }, [location.pathname]);
+
+    useEffect(() => {
+        const body = document.body;
+        if (darkMode) {
+            body.classList.add('dark-mode');
+            body.classList.remove('light-mode');
+        } else {
+            body.classList.add('light-mode');
+            body.classList.remove('dark-mode');
+        }
+    }, [darkMode]);
+
+    useEffect(() => {
+        const cursor = document.querySelector('.cursor');
+        const cursorPulse = document.querySelector('.cursor-pulse');
+
+        const moveCursor = (e) => {
+            cursor.style.top = `${e.clientY}px`;
+            cursor.style.left = `${e.clientX}px`;
+            cursorPulse.style.top = `${e.clientY}px`;
+            cursorPulse.style.left = `${e.clientX}px`;
+        };
+
+        const addHoverEffect = () => {
+            document.body.classList.add('hovering');
+        };
+
+        const removeHoverEffect = () => {
+            document.body.classList.remove('hovering');
+        };
+
+        const handleClick = () => {
+            document.body.classList.remove('hovering');
+        };
+
+        const attachEventListeners = () => {
+            window.addEventListener('mousemove', moveCursor);
+            document.querySelectorAll('a, button').forEach((el) => {
+                el.addEventListener('mouseover', addHoverEffect);
+                el.addEventListener('mouseout', removeHoverEffect);
+                el.addEventListener('click', handleClick);
+            });
+        };
+
+        attachEventListeners();
+
+        return () => {
+            window.removeEventListener('mousemove', moveCursor);
+            document.querySelectorAll('a, button').forEach((el) => {
+                el.removeEventListener('mouseover', addHoverEffect);
+                el.removeEventListener('mouseout', removeHoverEffect);
+                el.removeEventListener('click', handleClick);
+            });
+        };
+    }, [location]);
+
+    return (
+        <div className="flex min-h-screen">
+            <CanvasAnimation darkMode={darkMode} />
+            <LeftSidebar darkMode={darkMode} />
+            <div className="main-content flex flex-col relative z-10">
+                <Header hoverInfo={hoverInfo} darkMode={darkMode} />
+                <main className="flex-grow p-4">
+                            <Routes location={location}>
+                                <Route path="/" element={<HomePage darkMode={darkMode} />} />
+                                <Route path="/projects" element={<ProjectsPage darkMode={darkMode} />} />
+                                <Route path="/projects/:projectId" element={<ProjectDataPage darkMode={darkMode} />} />
+                                <Route path="/writing" element={<WritingPage darkMode={darkMode} />} />
+                                <Route path="/writing/:postId" element={<PostDataPage darkMode={darkMode} />} />
+                                <Route path="/resume" element={<ResumePage darkMode={darkMode} />} />
+                                <Route path="/info" element={<InfoPage darkMode={darkMode} />} />
+                            </Routes>
+                </main>
+                <Footer hoverInfo={hoverInfo} darkMode={darkMode} />
+            </div>
+            <RightSidebar darkMode={darkMode} setDarkMode={setDarkMode} />
+            <div className="cursor"></div>
+            <div className="cursor-pulse"></div>
+        </div>
+    );
+}
+
+export default function RootApp() {
+    return (
+        <Router>
+            <App />
+        </Router>
+    );
+}
+
+
+
+
+/*
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import HomePage from './components/HomePage';
+import ProjectsPage from './components/ProjectsPage';
+import ResumePage from './components/ResumePage';
+import InfoPage from './components/InfoPage';
+import WritingPage from './components/WritingPage';
+import ProjectDataPage from './components/ProjectDataPage';
+import PostDataPage from './components/PostDataPage';
+import LeftSidebar from './components/LeftSidebar';
+import RightSidebar from './components/RightSidebar';
+import CanvasAnimation from './components/CanvasAnimation';
+import LoadingSpinner from './components/LoadingSpinner';
+
+function App() {
+  const [hoverInfo, setHoverInfo] = useState([]);
+  const [darkMode, setDarkMode] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => setLoading(false), 500);
+
+    switch (location.pathname) {
+      case '/projects':
+        setHoverInfo(["Projects!"]);
+        break;
+      case '/resume':
+        setHoverInfo(["Resume"]);
+        break;
+      case '/writing':
+        setHoverInfo(["Writing"]);
+        break;
+      case '/info':
+        setHoverInfo(["Info"]);
+        break;
+      default:
+        setHoverInfo(["Home"]);
+    }
+
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const body = document.body;
+    if (darkMode) {
+      body.classList.add('dark-mode');
+      body.classList.remove('light-mode');
+    } else {
+      body.classList.add('light-mode');
+      body.classList.remove('dark-mode');
+    }
+  }, [darkMode]);
+
+  useEffect(() => {
+    const cursor = document.querySelector('.cursor');
+    const cursorPulse = document.querySelector('.cursor-pulse');
+
+    const moveCursor = (e) => {
+      cursor.style.top = `${e.clientY}px`;
+      cursor.style.left = `${e.clientX}px`;
+      cursorPulse.style.top = `${e.clientY}px`;
+      cursorPulse.style.left = `${e.clientX}px`;
+    };
+
+    const addHoverEffect = () => {
+      document.body.classList.add('hovering');
+    };
+
+    const removeHoverEffect = () => {
+      document.body.classList.remove('hovering');
+    };
+
+    const handleClick = () => {
+      document.body.classList.remove('hovering');
+    };
+
+    const attachEventListeners = () => {
+      window.addEventListener('mousemove', moveCursor);
+      document.querySelectorAll('a, button').forEach((el) => {
+        el.addEventListener('mouseover', addHoverEffect);
+        el.addEventListener('mouseout', removeHoverEffect);
+        el.addEventListener('click', handleClick);
+      });
+    };
+
+    attachEventListeners();
+
+    return () => {
+      window.removeEventListener('mousemove', moveCursor);
+      document.querySelectorAll('a, button').forEach((el) => {
+        el.removeEventListener('mouseover', addHoverEffect);
+        el.removeEventListener('mouseout', removeHoverEffect);
+        el.removeEventListener('click', handleClick);
+      });
+    };
+  }, [location]);
+
+  return (
+    <div className="flex min-h-screen">
+      {loading && <LoadingSpinner />}
+      <CanvasAnimation darkMode={darkMode} />
+      <LeftSidebar darkMode={darkMode} />
+      <div className="main-content flex flex-col relative z-10">
+        <Header hoverInfo={hoverInfo} darkMode={darkMode} />
+        <main className="flex-grow p-4">
+          <Routes location={location}>
+            <Route path="/" element={<HomePage darkMode={darkMode} />} />
+            <Route path="/projects" element={<ProjectsPage darkMode={darkMode} />} />
+            <Route path="/projects/:projectId" element={<ProjectDataPage darkMode={darkMode} />} />
+            <Route path="/writing" element={<WritingPage darkMode={darkMode} />} />
+            <Route path="/writing/:postId" element={<PostDataPage darkMode={darkMode} />} />
+            <Route path="/resume" element={<ResumePage darkMode={darkMode} />} />
+            <Route path="/info" element={<InfoPage darkMode={darkMode} />} />
+          </Routes>
+        </main>
+        <Footer hoverInfo={hoverInfo} darkMode={darkMode} />
+      </div>
+      <RightSidebar darkMode={darkMode} setDarkMode={setDarkMode} />
+      <div className="cursor"></div>
+      <div className="cursor-pulse"></div>
+    </div>
+  );
+}
+
+export default function RootApp() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}
+*/File: index.css
+Contents:
+/* Tailwind CSS imports */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/*
+Light Mode:
+
+Text: #2E242A
+Background: #F7F3E3
+Border: #293D38
+
+
+Dark Mode:
+
+Text: #F7F3E3
+Background: #2E242A
+Border: #293D38
+
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;500&family=PT+Sans:wght@400;700&family=Teko:wght@400;500&display=swap');
+
+
+body {
+  margin: 0;
+  font-family: 'IBM Plex Sans Condensed', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  font-style: normal;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Teko', sans-serif;
+  font-weight: 500;
+}
+
+h1 {
+  font-size: 60px;
+}
+
+h3 {
+  font-size: 24px;
+}
+
+.navbar, .left-sidebar, .right-sidebar, .headfoot {
+  font-family: 'PT Sans', sans-serif;
+  font-weight: 700;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.navbar {
+  background-color: rgba(0, 0, 0, 0);
+  display: inline-block;
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  padding: 2rem;
+  z-index: 100;
+}
+
+body.dark-mode {
+  background-color: #2E242A;
+  color: #F7F3E3;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+@keyframes fadeInAnimation {
+  0% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+  }
+}
+
+.left-sidebar, .right-sidebar {
+  width: 27px; /* Make the sidebars skinnier */
+  height: 100vh; /* Full height of the viewport */
+  position: fixed;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0);
+  color: #2E242A;
+  border: 2px solid #2E242A;
+}
+
+body.dark-mode .left-sidebar, 
+body.dark-mode .right-sidebar {
+  width: 26px; /* Make the sidebars skinnier */
+  color: #F7F3E3;
+  border: 1px solid #F7F3E3;
+}
+
+.left-sidebar {
+  left: 0;
+}
+
+.right-sidebar {
+  right: 0;
+}
+
+.main-content {
+  margin-left: 25px; /* Adjust for left sidebar */
+  margin-right: 25px; /* Adjust for right sidebar */
+  width: calc(100% - 50px); /* Adjust for sidebars */
+  overflow: hidden;
+}
+
+.main-content-area {
+  position: absolute; /* Use absolute positioning */
+  top: 25px; /* Start below the header */
+  bottom: 25px; /* End above the footer */
+  left: 0;
+  right: 0;
+  margin: 10px;
+  overflow: hidden;
+  width: calc(100% - 20px); /* Adjust width to fit between sidebars */
+  height: calc(100%-50px); /* Adjust height to fit between header and footer */
+  /* margin-top: 42.5vh; */
+  z-index: 1;
+}
+
+
+/* Project content adjustments */
+.project-content {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+/* Project info section */
+.project-info {
+  height: calc(100%-35px);
+  overflow-y: auto;
+}
+
+/* Project images section */
+.project-images {
+  max-width: 34%;
+  height: 100%;
+  margin-left: 34vw;
+  margin-top: -10px;
+  overflow: hidden;
+}
+
+/* Additional info section */
+.project-additional-info {
+  width: 33.33%;
+  display: flex;
+  margin-left: 66vw;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow-y: auto;
+  text-align: right;
+  z-index: 10;
+}
+
+
+
+/* ImageSwiper2 adjustments */
+.mySwiper2 {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.swiper-wrapper-2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.swiper-slide-2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  margin-bottom: 16px;
+}
+
+.swiper-slide-2 img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+
+
+
+
+
+
+
+
+
+
+.headfoot {
+  background-color: rgba(0, 0, 0, 0);
+  color: #2E242A;
+  border: 2px solid #2E242A;
+  height: 25px;
+}
+
+body.dark-mode .headfoot {
+  color: #F7F3E3;
+  border: 1px solid #F7F3E3;
+}
+
+.hover-info {
+  width: 100%; /* Adjust for sidebars */
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0);
+  z-index: 10;
+}
+
+.hover-info.top {
+  top: 0;
+  margin-top: -1%;
+}
+
+.hover-info.bottom {
+  bottom: 0;
+  margin-top: -1%;
+}
+
+.hover-info.top .hover-info-content {
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  animation: marquee-right 10s linear infinite;
+  padding-right: 100%;
+}
+
+.hover-info.bottom .hover-info-content {
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  animation: marquee-left 10s linear infinite;
+  padding-right: 100%;
+}
+
+.hover-info-content-2 {
+  animation-delay: 5s;
+}
+
+.hover-info-item {
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+.separator {
+  margin-left: 1rem;
+}
+
+@keyframes marquee-right {
+  0% {
+    transform: translate(-100%, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes marquee-left {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100%, 0);
+  }
+}
+
+/* Hide the default cursor */
+body {
+  cursor: none;
+}
+
+/* Base styles for the custom cursor */
+.cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  background-color: var(--cursor-color);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease, border 0.3s ease, opacity 0.3s ease;
+}
+
+.cursor-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  background-color: var(--cursor-color);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  opacity: 0.4;
+  animation: pulse 1.5s infinite;
+  transition: width 0.3s ease, height 0.3s ease, border 0.3s ease, opacity 0.3s ease;
+}
+
+/* Animation for pulsing effect */
+@keyframes pulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+/* Light and dark mode cursor colors */
+body.light-mode {
+  --cursor-color: #2E242A;
+  --cursor-color2: #F7F3E3;
+}
+
+body.dark-mode {
+  --cursor-color: #F7F3E3;
+  --cursor-color2: #2E242A;
+}
+
+/* Hide the cursor on specific elements */
+a, button {
+  cursor: none;
+}
+
+/* Hover effect on clickable elements */
+.hovering .cursor-pulse {
+  width: 45px;
+  height: 45px;
+  animation: none;
+  border: 2px solid var(--cursor-color);
+  opacity: 0.8;
+}
+
+.hovering .cursor {
+  background-color: var(--cursor-color2);
+}
+
+
+
+
+
+/* Spinner styles */
+.loading-spinner {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.spinner-border {
+  border-top-color: transparent;
+  border-right-color: var(--cursor-color);
+  border-bottom-color: var(--cursor-color);
+  border-left-color: var(--cursor-color2);
+}File: components/CanvasAnimation.js
+Contents:
+import React, { useEffect, useRef } from 'react';
+
+const CanvasAnimation = ({ darkMode }) => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    const resizeCanvas = () => {
+      const sidebarWidth = 25; // Width of the sidebars
+      const headerFooterHeight = 35; // Height of the header and footer
+      
+      // Set canvas dimensions taking into account the sidebars and header/footer
+      canvas.width = (window.innerWidth - sidebarWidth * 2) * window.devicePixelRatio;
+      canvas.height = (window.innerHeight - headerFooterHeight * 2) * window.devicePixelRatio;
+      canvas.style.width = `${window.innerWidth - sidebarWidth * 2}px`;
+      canvas.style.height = `${window.innerHeight - headerFooterHeight * 2}px`;
+    };
+
+    resizeCanvas();
+
+    class Dot {
+      constructor(x, y, effect) {
+        this.originX = x;
+        this.originY = y;
+        this.effect = effect;
+        this.x = Math.floor(x);
+        this.y = Math.floor(y);
+        this.ctx = this.effect.ctx;
+        this.ctx.fillStyle = darkMode ? '#F7F3E3' : '#2E242A';
+        this.vx = 0;
+        this.vy = 0;
+        this.ease = 0.9;
+        this.friction = 0.95;
+        this.dx = 0;
+        this.dy = 0;
+        this.distance = 0;
+        this.force = 0;
+        this.angle = 0;
+        this.size = 1;
+        this.draw();
+      }
+
+      draw() {
+        this.ctx.beginPath();
+        this.ctx.fillRect(this.x, this.y, this.size, this.size);
+
+      }
+
+      update() {
+        this.dx = this.effect.mouse.x - this.x;
+        this.dy = this.effect.mouse.y - this.y;
+        this.distance = this.dx * this.dx + this.dy * this.dy;
+        this.force = -this.effect.mouse.radius / this.distance * 8;
+
+        if (this.distance < this.effect.mouse.radius) {
+          this.angle = Math.atan2(this.dy, this.dx);
+          this.vx += this.force * Math.cos(this.angle);
+          this.vy += this.force * Math.sin(this.angle);
+        }
+
+        this.x += (this.vx *= this.friction) + (this.originX - this.x) * this.ease;
+        this.y += (this.vy *= this.friction) + (this.originY - this.y) * this.ease;
+        this.draw();
+      }
+    }
+
+    class Effect {
+      constructor(width, height, context) {
+        this.width = width;
+        this.height = height;
+        this.ctx = context;
+        this.particlesArray = [];
+        this.gap = 10;
+        this.mouse = {
+          radius: 0,
+          x: 0,
+          y: 0,
+        };
+        this.mouseTimer = null;
+        this.init();
+        this.addEventListeners();
+      }
+
+      addEventListeners() {
+        window.addEventListener('mousemove', this.handleMouseMove.bind(this));
+        window.addEventListener('resize', this.handleResize.bind(this));
+      }
+
+      handleMouseMove(e) {
+        this.mouse.x = e.clientX * window.devicePixelRatio -50;
+        this.mouse.y = e.pageY * window.devicePixelRatio-60;
+        this.mouse.radius = 10000;
+
+        clearTimeout(this.mouseTimer);
+        this.mouseTimer = setTimeout(() => {
+          this.mouse.radius = 0;
+        }, 750);
+      }
+
+      handleResize() {
+        resizeCanvas();
+        this.width = canvas.width;
+        this.height = canvas.height;
+        this.particlesArray = [];
+        this.init();
+      }
+
+      init() {
+        for (let x = 0; x < this.width; x += this.gap) {
+          for (let y = 0; y < this.height; y += this.gap) {
+            this.particlesArray.push(new Dot(x, y, this));
+          }
+        }
+      }
+
+      update() {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        for (let i = 0; i < this.particlesArray.length; i++) {
+          this.particlesArray[i].update();
+        }
+      }
+    }
+
+    const effect = new Effect(canvas.width, canvas.height, ctx);
+
+    const animate = () => {
+      effect.update();
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', effect.handleResize);
+      window.removeEventListener('mousemove', effect.handleMouseMove);
+    };
+  }, [darkMode]);
+
+  return (
+    <div style={{ position: 'absolute', top: '35px', bottom: '35px', left: '25px', right: '25px' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%' }} />
+    </div>
+  );
+};
+
+export default CanvasAnimation;
+File: components/ResumePage.js
+Contents:
+// ResumePage.js
+import React from 'react';
+import NavBox from './NavBox';
+
+function ResumePage({darkMode}) {
+  return (
+    <div className="main-content-area relative">
+      {<NavBox darkMode={darkMode}/>}
+      <h1 className="text-6xl absolute top-4 left-4">Resume</h1>
+      <div className="absolute top-24 left-4 w-1/2">
+        <div className="mb-4">Section 1 of Resume</div>
+        <div className="mb-4">Section 2 of Resume</div>
+        <div className="mb-4">Section 3 of Resume</div>
+        {/* Add more sections as needed */}
+      </div>
+      <div className="absolute bottom-4 right-4">
+        <a href="/path-to-resume.pdf" download className="btn">Download PDF</a>
+      </div>
+    </div>
+  );
+}
+
+export default ResumePage;
+File: components/ImageSwiper2.css
+Contents:
+/* ImageSwiper2.css */
+.mySwiper2 {
+    width: 100%;
+    height: calc(100vh - 70px); /* Adjust height to fit between header and footer */
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .swiper-wrapper-2 {
+    display: flex;
+    flex-direction: column; /* Ensure vertical alignment */
+    align-items: center;
+  }
+  
+  .swiper-slide-2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+    max-height: 100%; /* Ensure max-height does not cause overflow */
+    margin-bottom: 16px; /* Add margin between slides */
+  }
+  
+  .swiper-slide-2 img {
+    width: 100%;
+    height: auto;
+    max-width: 100%; /* Ensure image width fits within container */
+    object-fit: contain;
+    border-radius: 8px;
+  }
+  File: components/WritingPage.js
+Contents:
+import React from 'react';
+import NavBox from './NavBox';
+import ImageSwiper from './ImageSwiper';
+import image1 from '../logo512.jpg';
+
+const writingItems = [
+  { title: 'Post 1', image: image1, link: '/writing/post1' },
+  { title: 'Post 2', image: image1, link: '/writing/post2' },
+  { title: 'Post 3', image: image1, link: '/writing/post1' },
+  { title: 'Post 4', image: image1, link: '/writing/post1' },
+  { title: 'Post 5', image: image1, link: '/writing/post1' },
+  { title: 'Post 6', image: image1, link: '/writing/post1' },
+  { title: 'Post 7', image: image1, link: '/writing/post1' },
+  // Add more project items here
+];
+
+function WritingPage({ darkMode }) {
+  return (
+    <div className="main-content-area relative">
+      {<NavBox darkMode={darkMode}/>}
+      <h1 className="text-6xl absolute top-4 left-4">Writings</h1>
+      <div className="absolute inset-0">
+        <ImageSwiper items={writingItems} darkMode={darkMode} />
+      </div>
+    </div>
+  );
+}
+
+export default WritingPage;File: components/LoadingSpinner.js
+Contents:
+import React from 'react';
+
+const LoadingSpinner = () => {
+  return (
+    <div className="loading-spinner fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-0">
+      <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
+        <span className="visually-hidden"></span>
+      </div>
+    </div>
+  );
+};
+
+export default LoadingSpinner;
+File: components/Header.js
+Contents:
+import React from 'react';
+import HoverInfo from './HoverInfo';
+
+/*
+Light Mode:
+
+Text: 2E242A
+Background: F7F3E3
+Border: 293D38
+
+
+Dark Mode:
+
+Text: F7F3E3
+Background: 2E242A
+Border: 293D38
+
+*/
+
+function Header({ hoverInfo }) {
+  return (
+    <header className="headfoot p-4 relative">
+      <HoverInfo info={hoverInfo} direction="top" />
+    </header>
+  );
+}
+
+export default Header;
+File: components/HoverInfo.js
+Contents:
+import React from 'react';
+
+const HoverInfo = ({ info, direction }) => {
+  const combinedInfo = info; 
+
+  return (
+    <div className={`hover-info ${direction}`}>
+      <div className="hover-info-content">
+        {combinedInfo.map((item, index) => (
+          <div key={index} className="hover-info-item">
+            {item}
+            {index < combinedInfo.length - 1 && <span className="separator">    </span>}
+          </div>
+        ))}
+      </div>
+      <div className="hover-info-content hover-info-content-2">
+        {combinedInfo.map((item, index) => (
+          <div key={index} className="hover-info-item">
+            {item}
+            {index < combinedInfo.length - 1 && <span className="separator">    </span>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default HoverInfo;
+File: components/RightSidebar.js
+Contents:
+import React from 'react';
+
+const RightSidebar = ({ darkMode, setDarkMode }) => {
+  return (
+    <div className="right-sidebar h-full flex items-center justify-center">
+      <button 
+        className="transform -rotate-90 origin-center p-2 bg-gray-900 hover:bg-gray-800"
+        onClick={() => setDarkMode(!darkMode)}
+      >
+        {darkMode ? '' : ''}
+      </button>
+    </div>
+  );
+};
+
+export default RightSidebar;
+File: components/NavBox.js
+Contents:
+// NavBox.js
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+function NavBox({ darkMode }) {
+  return (
+    <div className={`navbar fixed top-4 right-4 p-4 ${darkMode ? 'bg-dark text-light border-dark' : 'bg-light text-dark border-light'}`}>
+      <nav className="flex flex-col">
+        <Link to="/" className="mb-2">Home</Link>
+        <Link to="/info" className="mb-2">Info</Link>
+        <Link to="/projects" className="mb-2">Projects</Link>
+        <Link to="/writing" className="mb-2">Writing</Link>
+        <Link to="/resume" className="mb-2">Resume</Link>
+      </nav>
+    </div>
+  );
+}
+
+export default NavBox;
+File: components/HomePage.js
+Contents:
+// HomePage.js
+import React from 'react';
+import NavBox from './NavBox';
+
+function HomePage({darkMode}) {
+  return (
+    <div className="main-content-area relative">
+      {<NavBox darkMode={darkMode}/>}
+      <h1 className="text-6xl absolute top-1 left-4">Riyaz Ahuja</h1>
+      <h2 className="text-2xl absolute top-16 left-4">Your Tagline Here</h2>
+      <p className="absolute bottom-4 right-4 w-1/3">This is a paragraph text area for the home page. You can put your info here.</p>
+    </div>
+  );
+}
+
+export default HomePage;
+File: components/ProjectDataPage.js
+Contents:
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import NavBox from './NavBox';
+import ImageSwiper2 from './ImageSwiper2';
+
+function ProjectDataPage({ darkMode }) {
+  const { projectId } = useParams();
+  const [project, setProject] = useState(null);
+  const projectFolderPath = `/projects/${projectId}`;
+
+  useEffect(() => {
+    // Fetch project details
+    fetch(`${projectFolderPath}/data.json`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Fetched project data:', data);
+        setProject(data);
+      })
+      .catch((error) => console.error('Error fetching project data:', error));
+  }, [projectId]);
+
+  if (!project) {
+    return <div>Loading...</div>;
+  }
+
+  const projectImages = project.images.map((img) => `${projectFolderPath}/images/${img}`);
+  console.log('Project images:', projectImages);
+
+  return (
+    <div className={`main-content-area relative ${darkMode ? 'dark-mode' : ''}`}>
+      {<NavBox darkMode={darkMode}/>}
+      <h1 className="text-6xl absolute top-1 left-4 w-1/3">{project.title}</h1>
+      <p className="project-info text-2xl absolute top-20 left-4 w-1/3">{project.content}</p>
+      <div className="project-images w-1/3 p-4">
+          <ImageSwiper2 items={projectImages} />
+      </div>
+      <div className="project-additional-info absolute bottom-4 right-4 w-1/3">
+          <div>
+            <h3>Links</h3>
+            <p>{project.contentLinks}</p>
+          </div>
+          <div>
+            <h3>Tags</h3>
+            <p>{project.contentTags}</p>
+          </div>
+          <div>
+            <h3>Additional Info</h3>
+            <p>{project.additionalInfo}</p>
+          </div>
+        </div>
+      </div>
+  );
+}
+
+export default ProjectDataPage;
+File: components/ImageSwiper.js
+Contents:
+// ImageSwiper.js
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import Swiper from 'swiper/bundle';
+import 'swiper/swiper-bundle.css';
+import './ImageSwiper.css';
+
+const ImageSwiper = ({ items, darkMode }) => {
+  useEffect(() => {
+    const swiper = new Swiper('.swiper-container', {
+      loop: true,
+      slidesPerView: 'auto',
+      freeMode: true,
+      mousewheel: {
+        releaseOnEdges: true,
+      },
+      direction: 'horizontal',
+    });
+
+    const thumbContainers = document.querySelectorAll('.thumbContainer');
+    thumbContainers.forEach((container, index) => {
+      const delay = index * 90;
+      container.classList.add('fadeInSlide');
+      container.style.animationDelay = `${delay}ms`;
+
+      // Add event listeners for hover effects
+      container.addEventListener('mouseover', addHoverEffect);
+      container.addEventListener('mouseout', removeHoverEffect);
+    });
+
+    return () => {
+      thumbContainers.forEach((container) => {
+        container.removeEventListener('mouseover', addHoverEffect);
+        container.removeEventListener('mouseout', removeHoverEffect);
+      });
+    };
+  }, [items]);
+
+  // Function to add hover effect
+  const addHoverEffect = () => {
+    document.body.classList.add('hovering');
+  };
+
+  // Function to remove hover effect
+  const removeHoverEffect = () => {
+    document.body.classList.remove('hovering');
+  };
+
+  return (
+    <div className="swiper-container">
+      <div className="swiper-wrapper">
+        {items.map((item, index) => (
+          <div key={index} className="swiper-slide">
+            <Link to={item.link} className="thumbContainer">
+              <img src={item.image} alt={item.title} />
+              <div className="projectInfo">
+                <h2 className={`serif ${darkMode ? 'dark-mode' : 'light-mode'}`}>{item.title}</h2>
+              </div>
+            </Link>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ImageSwiper;
+File: components/ImageSwiper2.js
+Contents:
+import React from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/free-mode';
+import './ImageSwiper2.css';
+
+const ImageSwiper2 = ({ items }) => {
+  return (
+    <Swiper
+      direction="vertical"
+      slidesPerView="auto"
+      freeMode={true}
+      mousewheel={true}
+      className="mySwiper2"
+    >
+      {items.map((item, index) => (
+        <SwiperSlide key={index} className="swiper-slide-2">
+          <img src={item} alt={`Project Image ${index + 1}`} />
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  );
+};
+
+export default ImageSwiper2;
+File: components/ImageSwiper.css
+Contents:
+.swiper-container {
+    width: 100%; /* Use 100% width to fit within the main content area */
+    height: fit-content; /* Use 100% height to fit within the main content area */
+    background: none;
+    margin: 0 auto;
+    overflow: hidden;
+    position: absolute; /* Use absolute positioning */
+    bottom: 0;
+  }
+  
+  .swiper-wrapper {
+    display: flex;
+    align-items: flex-end;
+  }
+  
+  .swiper-slide {
+    display: flex;
+    align-items: flex-end;
+    width: auto;
+    max-width: 300px; /* Ensure max-width does not cause overflow */
+    margin-right: 16px; /* Add margin between slides */
+  }
+  
+  .swiper-slide img {
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - 250px); /* Ensure image height fits within viewport */
+    border-radius: 8px;
+  }
+  
+  .projectInfo {
+    position: relative;
+    margin: 14px 0 13px 0;
+    text-transform: uppercase;
+  }
+  
+  .projectInfo h2 {
+    margin: 0;
+    font-size: 1rem; /* Adjust font size */
+  }
+  
+  .projectInfo h2.light-mode {
+    color: #2E242A; /* Light mode text color */
+  }
+  
+  .projectInfo h2.dark-mode {
+    color: #F7F3E3; /* Dark mode text color */
+  }
+  
+  .thumbContainer {
+    opacity: 1;
+    transform: translateY(60%);
+    transition: transform 0.5s;
+  }
+  
+  .thumbContainer img,
+  .thumbContainer video {
+    display: block;
+    position: relative;
+    width: 100%; /* Adjust to fit within container */
+    height: auto;
+  }
+  
+  .fadeInSlide {
+    animation-name: fadeInSlide;
+    animation-duration: 1.5s;
+    animation-timing-function: cubic-bezier(1, 0.055, 0.32, 1);
+    animation-fill-mode: forwards;
+  }
+  
+  @keyframes fadeInSlide {
+    0% {
+      transform: translateY(60%);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }File: components/PostDataPage.js
+Contents:
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import NavBox from './NavBox';
+
+const posts = {
+  'post1': {
+    title: 'Post 1',
+    content: 'Details about post 1.'
+  },
+  'post2': {
+    title: 'Post 2',
+    content: 'Details about post 2.'
+  },
+  // Add more posts here
+};
+
+function PostPage({darkMode}) {
+  const { postId } = useParams();
+  const post = posts[postId] || { title: 'Post not found', content: 'No details available.' };
+
+  return (
+    <div className="container mx-auto p-4 relative">
+      {<NavBox darkMode={darkMode}/>}
+      <h1 className="text-4xl mb-4">{post.title}</h1>
+      <p>{post.content}</p>
+    </div>
+  );
+}
+
+export default PostPage;
+File: components/ProjectsPage.js
+Contents:
+/*import React from 'react';
+import NavBox from './NavBox';
+import ImageSwiper from './ImageSwiper';
+import image1 from '../logo512.jpg';
+
+const projectItems = [
+  { title: 'Project 1', image: image1, link: '/projects/project1' },
+  { title: 'Project 2', image: image1, link: '/projects/project2' },
+  { title: 'Project 3', image: image1, link: '/projects/project1' },
+  { title: 'Project 4', image: image1, link: '/projects/project1' },
+  { title: 'Project 5', image: image1, link: '/projects/project1' },
+  { title: 'Project 6', image: image1, link: '/projects/project1' },
+  { title: 'Project 7', image: image1, link: '/projects/project1' },
+  { title: 'Project 8', image: image1, link: '/projects/project1' },
+  { title: 'Project 9', image: image1, link: '/projects/project1' },
+
+  // Add more project items here
+];
+
+function ProjectsPage({ darkMode }) {
+  return (
+    <div className="main-content-area relative">
+      {<NavBox darkMode={darkMode}/>}
+      <h1 className="text-6xl absolute top-4 left-4">Projects</h1>
+      <div className="absolute inset-0">
+        <ImageSwiper items={projectItems} darkMode={darkMode} />
+      </div>
+    </div>
+  );
+}
+
+export default ProjectsPage;
+*/
+
+// ProjectsPage.js
+import React, { useEffect, useState } from 'react';
+import NavBox from './NavBox';
+import ImageSwiper from './ImageSwiper';
+
+
+function ProjectsPage({ darkMode }) {
+  const [projectItems, setProjectItems] = useState([]);
+
+  useEffect(() => {
+    const fetchProjectData = async () => {
+      try {
+        const projectPaths = ['stagira','stagira copy','stagira copy 2','stagira copy 3','stagira copy 4','stagira copy 5','stagira copy 6','stagira copy 7','stagira copy 8']; // Add all project folders here or dynamically fetch them if possible
+        const projectDataPromises = projectPaths.map(async (projectPath) => {
+          const response = await fetch(`/projects/${projectPath}/data.json`);
+          const data = await response.json();
+          return {
+            ...data,
+            image: `/projects/${projectPath}/images/${data.images[0]}`, // Set correct image path
+          };
+        });
+
+        const projects = await Promise.all(projectDataPromises);
+        setProjectItems(projects);
+      } catch (error) {
+        console.error('Error fetching project data:', error);
+      }
+    };
+
+    fetchProjectData();
+  }, []);
+
+  return (
+    <div className="main-content-area relative">
+      {<NavBox darkMode={darkMode} />}
+      <h1 className="text-6xl absolute top-4 left-4">Projects</h1>
+      <div className="absolute inset-0">
+        <ImageSwiper items={projectItems} darkMode={darkMode} />
+      </div>
+    </div>
+  );
+}
+
+export default ProjectsPage;
+File: components/Footer.js
+Contents:
+import React from 'react';
+import HoverInfo from './HoverInfo';
+
+
+function Footer({ hoverInfo }) {
+  return (
+    <footer className="headfoot p-4 relative">
+      <HoverInfo info={hoverInfo} direction="bottom" />
+    </footer>
+  );
+}
+
+
+export default Footer;
+File: components/InfoPage.js
+Contents:
+// InfoPage.js
+import React from 'react';
+import NavBox from './NavBox';
+
+function InfoPage({darkMode}) {
+  return (
+    <div className="main-content-area relative">
+      {<NavBox darkMode={darkMode}/>}
+      <h1 className="text-6xl absolute top-4 left-4">Riyaz Ahuja</h1>
+      <p className="absolute bottom-4 right-4 w-1/3">This is a paragraph text area for info page. You can put your info here.</p>
+      <p className="absolute bottom-4 left-4 w-1/3">This is a paragraph text area for links and contact info.</p>
+    </div>
+  );
+}
+
+export default InfoPage;
+File: components/LeftSidebar.js
+Contents:
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+
+const LeftSidebar = () => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const getPageName = (path) => {
+    switch (path) {
+      case '/':
+        return 'HOME';
+      case '/projects':
+        return 'PROJECTS';
+      case '/resume':
+        return 'RESUME';
+      case '/writing':
+        return 'WRITING';
+      case '/info':
+        return 'INFO';
+      default:
+        const raw = path.split('/').filter(Boolean).join(' / ')
+        return raw.split(" ").map((word) => { 
+          return word.toUpperCase(); 
+      }).join(" ");
+    }
+  };
+
+  return (
+    <div className="left-sidebar h-full flex items-center justify-center">
+      <p className="transform -rotate-90 origin-center whitespace-nowrap text-lg">
+        {getPageName(currentPath)}
+      </p>
+    </div>
+  );
+};
+
+export default LeftSidebar;
+

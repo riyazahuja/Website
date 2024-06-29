@@ -3,13 +3,51 @@
 @tailwind components;
 @tailwind utilities;
 
+
+/*
+Light Mode:
+
+Text: #2E242A
+Background: #F7F3E3
+Border: #293D38
+
+
+Dark Mode:
+
+Text: #F7F3E3
+Background: #2E242A
+Border: #293D38
+
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;500&family=PT+Sans:wght@400;700&family=Teko:wght@400;500&display=swap');
+
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: 'IBM Plex Sans Condensed', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  font-style: normal;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Teko', sans-serif;
+  font-weight: 500;
+}
+
+h1 {
+  font-size: 60px;
+}
+
+h3 {
+  font-size: 24px;
+}
+
+.navbar, .left-sidebar, .right-sidebar, .headfoot {
+  font-family: 'PT Sans', sans-serif;
+  font-weight: 700;
 }
 
 code {
@@ -17,20 +55,49 @@ code {
     monospace;
 }
 
+.navbar {
+  background-color: rgba(0, 0, 0, 0);
+  display: inline-block;
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  padding: 2rem;
+  z-index: 100;
+}
+
 body.dark-mode {
-  background-color: #121212;
-  color: #ffffff;
+  background-color: #2E242A;
+  color: #F7F3E3;
 }
 
 html, body, #root {
   height: 100%;
 }
 
+@keyframes fadeInAnimation {
+  0% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+  }
+}
+
 .left-sidebar, .right-sidebar {
-  width: 60px; /* Make the sidebars skinnier */
+  width: 27px; /* Make the sidebars skinnier */
   height: 100vh; /* Full height of the viewport */
   position: fixed;
   top: 0;
+  background-color: rgba(0, 0, 0, 0);
+  color: #2E242A;
+  border: 2px solid #2E242A;
+}
+
+body.dark-mode .left-sidebar, 
+body.dark-mode .right-sidebar {
+  width: 26px; /* Make the sidebars skinnier */
+  color: #F7F3E3;
+  border: 1px solid #F7F3E3;
 }
 
 .left-sidebar {
@@ -42,9 +109,116 @@ html, body, #root {
 }
 
 .main-content {
-  margin-left: 60px; /* Adjust for left sidebar */
-  margin-right: 60px; /* Adjust for right sidebar */
-  width: calc(100% - 120px); /* Adjust for sidebars */
+  margin-left: 25px; /* Adjust for left sidebar */
+  margin-right: 25px; /* Adjust for right sidebar */
+  width: calc(100% - 50px); /* Adjust for sidebars */
+  overflow: hidden;
+}
+
+.main-content-area {
+  position: absolute; /* Use absolute positioning */
+  top: 25px; /* Start below the header */
+  bottom: 25px; /* End above the footer */
+  left: 0;
+  right: 0;
+  margin: 10px;
+  overflow: hidden;
+  width: calc(100% - 20px); /* Adjust width to fit between sidebars */
+  height: calc(100%-50px); /* Adjust height to fit between header and footer */
+  /* margin-top: 42.5vh; */
+  z-index: 1;
+}
+
+
+/* Project content adjustments */
+.project-content {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+/* Project info section */
+.project-info {
+  height: calc(100%-35px);
+  overflow-y: auto;
+}
+
+/* Project images section */
+.project-images {
+  max-width: 34%;
+  height: 100%;
+  margin-left: 34vw;
+  margin-top: -10px;
+  overflow: hidden;
+}
+
+/* Additional info section */
+.project-additional-info {
+  width: 33.33%;
+  display: flex;
+  margin-left: 66vw;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow-y: auto;
+  text-align: right;
+  z-index: 10;
+}
+
+
+
+/* ImageSwiper2 adjustments */
+.mySwiper2 {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.swiper-wrapper-2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.swiper-slide-2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  margin-bottom: 16px;
+}
+
+.swiper-slide-2 img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+
+
+
+
+
+
+
+
+
+
+.headfoot {
+  background-color: rgba(0, 0, 0, 0);
+  color: #2E242A;
+  border: 2px solid #2E242A;
+  height: 25px;
+}
+
+body.dark-mode .headfoot {
+  color: #F7F3E3;
+  border: 1px solid #F7F3E3;
 }
 
 .hover-info {
@@ -53,17 +227,17 @@ html, body, #root {
   overflow: hidden;
   white-space: nowrap;
   background: rgba(0, 0, 0, 0);
-  color: white;
   z-index: 10;
-  padding: 0.3rem;
 }
 
 .hover-info.top {
   top: 0;
+  margin-top: -1%;
 }
 
 .hover-info.bottom {
   bottom: 0;
+  margin-top: -1%;
 }
 
 .hover-info.top .hover-info-content {
@@ -111,4 +285,95 @@ html, body, #root {
   100% {
     transform: translate(-100%, 0);
   }
+}
+
+/* Hide the default cursor */
+body {
+  cursor: none;
+}
+
+/* Base styles for the custom cursor */
+.cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  background-color: var(--cursor-color);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease, border 0.3s ease, opacity 0.3s ease;
+}
+
+.cursor-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  background-color: var(--cursor-color);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  opacity: 0.4;
+  animation: pulse 1.5s infinite;
+  transition: width 0.3s ease, height 0.3s ease, border 0.3s ease, opacity 0.3s ease;
+}
+
+/* Animation for pulsing effect */
+@keyframes pulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+/* Light and dark mode cursor colors */
+body.light-mode {
+  --cursor-color: #2E242A;
+  --cursor-color2: #F7F3E3;
+}
+
+body.dark-mode {
+  --cursor-color: #F7F3E3;
+  --cursor-color2: #2E242A;
+}
+
+/* Hide the cursor on specific elements */
+a, button {
+  cursor: none;
+}
+
+/* Hover effect on clickable elements */
+.hovering .cursor-pulse {
+  width: 45px;
+  height: 45px;
+  animation: none;
+  border: 2px solid var(--cursor-color);
+  opacity: 0.8;
+}
+
+.hovering .cursor {
+  background-color: var(--cursor-color2);
+}
+
+
+
+
+
+/* Spinner styles */
+.loading-spinner {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.spinner-border {
+  border-top-color: transparent;
+  border-right-color: var(--cursor-color);
+  border-bottom-color: var(--cursor-color);
+  border-left-color: var(--cursor-color2);
 }

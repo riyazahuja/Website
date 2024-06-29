@@ -1,7 +1,7 @@
 import React from 'react';
 
 const HoverInfo = ({ info, direction }) => {
-  const combinedInfo = [...info, ...info, ...info, ...info]; 
+  const combinedInfo = info; 
 
   return (
     <div className={`hover-info ${direction}`}>
@@ -9,7 +9,7 @@ const HoverInfo = ({ info, direction }) => {
         {combinedInfo.map((item, index) => (
           <div key={index} className="hover-info-item">
             {item}
-            {index < combinedInfo.length - 1 && <span className="separator"> | </span>}
+            {index < combinedInfo.length - 1 && <span className="separator">    </span>}
           </div>
         ))}
       </div>
@@ -17,7 +17,7 @@ const HoverInfo = ({ info, direction }) => {
         {combinedInfo.map((item, index) => (
           <div key={index} className="hover-info-item">
             {item}
-            {index < combinedInfo.length - 1 && <span className="separator"> | </span>}
+            {index < combinedInfo.length - 1 && <span className="separator">    </span>}
           </div>
         ))}
       </div>

@@ -1,14 +1,27 @@
 import React from 'react';
-import HoverInfo from './HoverInfo';
 import NavBox from './NavBox';
-const writeInfo = ["Writing!"];
+import ImageSwiper from './ImageSwiper';
+import image1 from '../logo512.jpg';
 
-function WritingPage() {
+const writingItems = [
+  { title: 'Post 1', image: image1, link: '/writing/post1' },
+  { title: 'Post 2', image: image1, link: '/writing/post2' },
+  { title: 'Post 3', image: image1, link: '/writing/post1' },
+  { title: 'Post 4', image: image1, link: '/writing/post1' },
+  { title: 'Post 5', image: image1, link: '/writing/post1' },
+  { title: 'Post 6', image: image1, link: '/writing/post1' },
+  { title: 'Post 7', image: image1, link: '/writing/post1' },
+  // Add more project items here
+];
+
+function WritingPage({ darkMode }) {
   return (
-    <div className="container mx-auto p-4 relative">
-        {<NavBox />}
-      <h1 className="text-4xl mb-4">Write</h1>
-      <p>This is the writings page of my personal website.</p>
+    <div className="main-content-area relative">
+      {<NavBox darkMode={darkMode}/>}
+      <h1 className="text-6xl absolute top-4 left-4">Writings</h1>
+      <div className="absolute inset-0">
+        <ImageSwiper items={writingItems} darkMode={darkMode} />
+      </div>
     </div>
   );
 }
