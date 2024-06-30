@@ -1,0 +1,11 @@
+{
+    "title": "Orbisol",
+    "content": "TODO CONTENT",
+    "images": [
+      "IMG_4229.jpg","IMG_4233.jpg","Screenshot 2023-09-16 at 10.38.23 AM.jpg","Screenshot 2023-09-16 at 10.38.48 AM.jpg","Screenshot 2023-09-16 at 10.39.56 AM.jpg","Screen Recording 2023-09-16 at 10.42.28 AM.mov"
+    ],
+    "link": "/projects/orbisol",
+    "contentLinks": {"Devpost":"https://devpost.com/software/orbisol","Github":"https://github.com/riyazahuja/Orbisol"},
+    "contentTags": ["OpenGL","Python","PyGame"],
+    "additionalInfo": "Additional info for project 1"
+  }
