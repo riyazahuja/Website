@@ -1,0 +1,9 @@
+{
+    "title": "SIER",
+    "content": "TODO CONTENT",
+    "images": ["Screenshot 2024-06-29 at 11.12.50 PM.jpg","Screenshot 2024-06-29 at 11.06.38 PM.jpg","Screenshot 2024-06-29 at 11.07.46 PM.jpg","Screenshot 2024-06-29 at 11.08.41 PM.jpg","Screenshot 2024-06-29 at 11.09.59 PM.jpg","Screenshot 2024-06-29 at 11.10.49 PM.jpg"],
+    "link": "/projects/sier",
+    "contentLinks": {"Github":"https://github.com/riyazahuja/SIER"},
+    "contentTags": ["Python + Django","LSTM + Bahdanau Attention + LIME","Keras + Tensorflow","Technical/Quantitative Analysis"],
+    "additionalInfo": "Additional info for project 1"
+  }

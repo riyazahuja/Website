@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import NavBox from './NavBox';
 import ImageSwiper2 from './ImageSwiper2';
+import parse from 'html-react-parser';
 
 function ProjectDataPage({ darkMode }) {
   const { projectId } = useParams();
   const [project, setProject] = useState(null);
-  const projectFolderPath = `/projects/${projectId}`;
+  const projectFolderPath = `/projectData/${projectId}`;
 
   useEffect(() => {
     // Fetch project details
@@ -54,6 +55,12 @@ function ProjectDataPage({ darkMode }) {
   const projectImages = project.images.map((img) => `${projectFolderPath}/images/${img}`);
   console.log('Project images:', projectImages);
 
+  const links = Object.keys(project.contentLinks).map((k)=> {
+    const v = project.contentLinks[k];
+    const text = `<a href = ${v}> ${k} </a>`;
+    return text
+  });
+
   return (
     <div className={`main-content-area relative ${darkMode ? 'dark-mode' : ''}`}>
       <NavBox darkMode={darkMode} />
@@ -65,11 +72,11 @@ function ProjectDataPage({ darkMode }) {
       <div className="project-additional-info absolute bottom-4 right-4 w-1/3">
         <div>
           <h3>Links</h3>
-          <p>{project.contentLinks}</p>
+          <p>{parse(links.join('</p><p>'))}</p>
         </div>
         <div>
           <h3>Tags</h3>
-          <p>{project.contentTags}</p>
+          {parse('<p>'+project.contentTags.join('</p><p>')+'</p>')}
         </div>
         <div>
           <h3>Additional Info</h3>
