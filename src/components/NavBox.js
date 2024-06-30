@@ -32,7 +32,7 @@ function NavBox({ darkMode }) {
   }, []);
 
   return (
-    <div className={`navbar fixed top-4 right-4 p-4 ${darkMode ? 'bg-dark text-light border-dark' : 'bg-light text-dark border-light'}`}>
+    <div className={`navbar top-4 right-4 ${darkMode ? 'bg-dark text-light border-dark' : 'bg-light text-dark border-light'}`}>
       <nav className="flex flex-col">
         <Link to="/" className="mb-2">Home</Link>
         <Link to="/info" className="mb-2">Info</Link>
