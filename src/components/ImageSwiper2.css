@@ -23,7 +23,7 @@
     margin-bottom: 16px; /* Add margin between slides */
   }
   
-  .swiper-slide-2 img {
+  .swiper-slide-2 img, .swiper-slide-2 video {
     width: 100%;
     height: auto;
     max-width: 100%; /* Ensure image width fits within container */

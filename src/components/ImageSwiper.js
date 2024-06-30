@@ -59,7 +59,7 @@ const ImageSwiper = ({ items, darkMode }) => {
         {items.map((item, index) => (
           <div key={index} className="swiper-slide">
             <Link to={item.link} className="thumbContainer">
-              <img src={item.image} alt={item.title} />
+              <img src={item.image} alt={item.title} style={{border: `${darkMode ?  '2px solid #F7F3E3':'3px solid #2E242A'}`}}/>
               <div className="projectInfo">
                 <h2 className={`serif ${darkMode ? 'dark-mode' : 'light-mode'}`}>{item.title}</h2>
               </div>

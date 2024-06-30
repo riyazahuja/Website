@@ -67,7 +67,7 @@ function ProjectDataPage({ darkMode }) {
       <h1 className="text-6xl absolute top-1 left-4 w-1/3">{project.title}</h1>
       <p className="project-info text-2xl absolute top-20 left-4 w-1/3">{project.content}</p>
       <div className="project-images w-1/3 p-4">
-        <ImageSwiper2 items={projectImages} />
+        <ImageSwiper2 items={projectImages} darkMode={darkMode} />
       </div>
       <div className="project-additional-info absolute bottom-4 right-4 w-1/3">
         <div>
