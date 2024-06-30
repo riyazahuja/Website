@@ -1,8 +1,36 @@
-// NavBox.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function NavBox({ darkMode }) {
+  useEffect(() => {
+    const addHoverEffect = () => {
+      document.body.classList.add('hovering');
+    };
+
+    const removeHoverEffect = () => {
+      document.body.classList.remove('hovering');
+    };
+
+    const handleClick = () => {
+      document.body.classList.remove('hovering');
+    };
+
+    const navLinks = document.querySelectorAll('.navbar a');
+    navLinks.forEach((el) => {
+      el.addEventListener('mouseover', addHoverEffect);
+      el.addEventListener('mouseout', removeHoverEffect);
+      el.addEventListener('click', handleClick);
+    });
+
+    return () => {
+      navLinks.forEach((el) => {
+        el.removeEventListener('mouseover', addHoverEffect);
+        el.removeEventListener('mouseout', removeHoverEffect);
+        el.removeEventListener('click', handleClick);
+      });
+    };
+  }, []);
+
   return (
     <div className={`navbar fixed top-4 right-4 p-4 ${darkMode ? 'bg-dark text-light border-dark' : 'bg-light text-dark border-light'}`}>
       <nav className="flex flex-col">

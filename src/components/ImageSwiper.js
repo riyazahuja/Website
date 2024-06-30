@@ -1,4 +1,3 @@
-// ImageSwiper.js
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Swiper from 'swiper/bundle';
@@ -7,6 +6,7 @@ import './ImageSwiper.css';
 
 const ImageSwiper = ({ items, darkMode }) => {
   useEffect(() => {
+    console.log('Initializing Swiper...');
     const swiper = new Swiper('.swiper-container', {
       loop: true,
       slidesPerView: 'auto',
@@ -26,12 +26,14 @@ const ImageSwiper = ({ items, darkMode }) => {
       // Add event listeners for hover effects
       container.addEventListener('mouseover', addHoverEffect);
       container.addEventListener('mouseout', removeHoverEffect);
+      container.addEventListener('click', handleClick);
     });
 
     return () => {
       thumbContainers.forEach((container) => {
         container.removeEventListener('mouseover', addHoverEffect);
         container.removeEventListener('mouseout', removeHoverEffect);
+        container.addEventListener('click', handleClick);
       });
     };
   }, [items]);
@@ -43,6 +45,10 @@ const ImageSwiper = ({ items, darkMode }) => {
 
   // Function to remove hover effect
   const removeHoverEffect = () => {
+    document.body.classList.remove('hovering');
+  };
+
+  const handleClick = () => {
     document.body.classList.remove('hovering');
   };
 

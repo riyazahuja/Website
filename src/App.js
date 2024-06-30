@@ -33,8 +33,13 @@ function App() {
             case '/info':
                 setHoverInfo(["This is the info page", "This is the second element of the info page", "This is the third element of the info page"]);
                 break;
+            case '/':
+              setHoverInfo(["Hello my name is Riyaz Ahuja and this is my website!"]);
+              break;
             default:
-                setHoverInfo(["Hello my name is Riyaz Ahuja and this is my website!"]);
+              const raw = location.pathname.split('/')
+              const last = raw[raw.length-1]
+              setHoverInfo([last]);
         }
     }, [location.pathname]);
 
@@ -49,49 +54,52 @@ function App() {
         }
     }, [darkMode]);
 
+
+
     useEffect(() => {
-        const cursor = document.querySelector('.cursor');
-        const cursorPulse = document.querySelector('.cursor-pulse');
-
-        const moveCursor = (e) => {
-            cursor.style.top = `${e.clientY}px`;
-            cursor.style.left = `${e.clientX}px`;
-            cursorPulse.style.top = `${e.clientY}px`;
-            cursorPulse.style.left = `${e.clientX}px`;
-        };
-
-        const addHoverEffect = () => {
-            document.body.classList.add('hovering');
-        };
-
-        const removeHoverEffect = () => {
-            document.body.classList.remove('hovering');
-        };
-
-        const handleClick = () => {
-            document.body.classList.remove('hovering');
-        };
-
-        const attachEventListeners = () => {
-            window.addEventListener('mousemove', moveCursor);
-            document.querySelectorAll('a, button').forEach((el) => {
-                el.addEventListener('mouseover', addHoverEffect);
-                el.addEventListener('mouseout', removeHoverEffect);
-                el.addEventListener('click', handleClick);
-            });
-        };
-
-        attachEventListeners();
-
-        return () => {
-            window.removeEventListener('mousemove', moveCursor);
-            document.querySelectorAll('a, button').forEach((el) => {
-                el.removeEventListener('mouseover', addHoverEffect);
-                el.removeEventListener('mouseout', removeHoverEffect);
-                el.removeEventListener('click', handleClick);
-            });
-        };
+      const cursor = document.querySelector('.cursor');
+      const cursorPulse = document.querySelector('.cursor-pulse');
+    
+      const moveCursor = (e) => {
+        cursor.style.top = `${e.clientY}px`;
+        cursor.style.left = `${e.clientX}px`;
+        cursorPulse.style.top = `${e.clientY}px`;
+        cursorPulse.style.left = `${e.clientX}px`;
+      };
+    
+      const addHoverEffect = () => {
+        document.body.classList.add('hovering');
+      };
+    
+      const removeHoverEffect = () => {
+        document.body.classList.remove('hovering');
+      };
+    
+      const handleClick = () => {
+        document.body.classList.remove('hovering');
+      };
+    
+      const attachEventListeners = () => {
+        window.addEventListener('mousemove', moveCursor);
+        document.querySelectorAll('a, button, .navbar a').forEach((el) => {
+          el.addEventListener('mouseover', addHoverEffect);
+          el.addEventListener('mouseout', removeHoverEffect);
+          el.addEventListener('click', handleClick);
+        });
+      };
+    
+      attachEventListeners();
+    
+      return () => {
+        window.removeEventListener('mousemove', moveCursor);
+        document.querySelectorAll('a, button, .navbar a').forEach((el) => {
+          el.removeEventListener('mouseover', addHoverEffect);
+          el.removeEventListener('mouseout', removeHoverEffect);
+          el.removeEventListener('click', handleClick);
+        });
+      };
     }, [location]);
+
 
     return (
         <div className="flex min-h-screen">

@@ -65,6 +65,11 @@ code {
   z-index: 100;
 }
 
+body {
+  color: #2E242A;
+  background-color: #F7F3E3;
+}
+
 body.dark-mode {
   background-color: #2E242A;
   color: #F7F3E3;
