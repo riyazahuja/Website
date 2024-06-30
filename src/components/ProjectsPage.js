@@ -15,8 +15,6 @@ function ProjectsPage({ darkMode }) {
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
           console.log(response)
-          //const txt= await response.text()
-          //console.log(txt)
           const data = await response.json();
           return {
             ...data,

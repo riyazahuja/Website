@@ -1,0 +1,10 @@
+{
+    "title": "First Post",
+    "content": "TODO CONTENT",
+    "images": ["IMG_3096.jpg","IMG_1283.mov","IMG_2601.mov","IMG_3062.jpg","IMG_3094.jpg","IMG_3095.jpg","IMG_5322.mov","IMG_3097.jpg"
+    ],
+    "link": "/writing/06-30-2024",
+    "contentLinks": {"Github":"https://github.com/riyazahuja/Keraunos"},
+    "contentTags": ["Python","Arduino","OpenCV","YOLO","Drones","Bluetooth/WiFi Networking"],
+    "additionalInfo": "Additional info for project 1"
+  }

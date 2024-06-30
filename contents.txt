@@ -35,8 +35,13 @@ function App() {
             case '/info':
                 setHoverInfo(["This is the info page", "This is the second element of the info page", "This is the third element of the info page"]);
                 break;
+            case '/':
+              setHoverInfo(["Hello my name is Riyaz Ahuja and this is my website!"]);
+              break;
             default:
-                setHoverInfo(["Hello my name is Riyaz Ahuja and this is my website!"]);
+              const raw = location.pathname.split('/')
+              const last = raw[raw.length-1]
+              setHoverInfo([last]);
         }
     }, [location.pathname]);
 
@@ -51,49 +56,52 @@ function App() {
         }
     }, [darkMode]);
 
+
+
     useEffect(() => {
-        const cursor = document.querySelector('.cursor');
-        const cursorPulse = document.querySelector('.cursor-pulse');
-
-        const moveCursor = (e) => {
-            cursor.style.top = `${e.clientY}px`;
-            cursor.style.left = `${e.clientX}px`;
-            cursorPulse.style.top = `${e.clientY}px`;
-            cursorPulse.style.left = `${e.clientX}px`;
-        };
-
-        const addHoverEffect = () => {
-            document.body.classList.add('hovering');
-        };
-
-        const removeHoverEffect = () => {
-            document.body.classList.remove('hovering');
-        };
-
-        const handleClick = () => {
-            document.body.classList.remove('hovering');
-        };
-
-        const attachEventListeners = () => {
-            window.addEventListener('mousemove', moveCursor);
-            document.querySelectorAll('a, button').forEach((el) => {
-                el.addEventListener('mouseover', addHoverEffect);
-                el.addEventListener('mouseout', removeHoverEffect);
-                el.addEventListener('click', handleClick);
-            });
-        };
-
-        attachEventListeners();
-
-        return () => {
-            window.removeEventListener('mousemove', moveCursor);
-            document.querySelectorAll('a, button').forEach((el) => {
-                el.removeEventListener('mouseover', addHoverEffect);
-                el.removeEventListener('mouseout', removeHoverEffect);
-                el.removeEventListener('click', handleClick);
-            });
-        };
+      const cursor = document.querySelector('.cursor');
+      const cursorPulse = document.querySelector('.cursor-pulse');
+    
+      const moveCursor = (e) => {
+        cursor.style.top = `${e.clientY}px`;
+        cursor.style.left = `${e.clientX}px`;
+        cursorPulse.style.top = `${e.clientY}px`;
+        cursorPulse.style.left = `${e.clientX}px`;
+      };
+    
+      const addHoverEffect = () => {
+        document.body.classList.add('hovering');
+      };
+    
+      const removeHoverEffect = () => {
+        document.body.classList.remove('hovering');
+      };
+    
+      const handleClick = () => {
+        document.body.classList.remove('hovering');
+      };
+    
+      const attachEventListeners = () => {
+        window.addEventListener('mousemove', moveCursor);
+        document.querySelectorAll('a, button, .navbar a').forEach((el) => {
+          el.addEventListener('mouseover', addHoverEffect);
+          el.addEventListener('mouseout', removeHoverEffect);
+          el.addEventListener('click', handleClick);
+        });
+      };
+    
+      attachEventListeners();
+    
+      return () => {
+        window.removeEventListener('mousemove', moveCursor);
+        document.querySelectorAll('a, button, .navbar a').forEach((el) => {
+          el.removeEventListener('mouseover', addHoverEffect);
+          el.removeEventListener('mouseout', removeHoverEffect);
+          el.removeEventListener('click', handleClick);
+        });
+      };
     }, [location]);
+
 
     return (
         <div className="flex min-h-screen">
@@ -336,6 +344,11 @@ code {
   right: 2rem;
   padding: 2rem;
   z-index: 100;
+}
+
+body {
+  color: #2E242A;
+  background-color: #F7F3E3;
 }
 
 body.dark-mode {
@@ -860,35 +873,53 @@ Contents:
   }
   File: components/WritingPage.js
 Contents:
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import NavBox from './NavBox';
 import ImageSwiper from './ImageSwiper';
-import image1 from '../logo512.jpg';
-
-const writingItems = [
-  { title: 'Post 1', image: image1, link: '/writing/post1' },
-  { title: 'Post 2', image: image1, link: '/writing/post2' },
-  { title: 'Post 3', image: image1, link: '/writing/post1' },
-  { title: 'Post 4', image: image1, link: '/writing/post1' },
-  { title: 'Post 5', image: image1, link: '/writing/post1' },
-  { title: 'Post 6', image: image1, link: '/writing/post1' },
-  { title: 'Post 7', image: image1, link: '/writing/post1' },
-  // Add more project items here
-];
 
 function WritingPage({ darkMode }) {
+  const [postItems, setPostItems] = useState([]);
+
+  useEffect(() => {
+    const fetchPostData = async () => {
+      try {
+        const postPaths = ['06-30-2024']; // Ensure this matches the folder name exactly
+        const postDataPromises = postPaths.map(async (postPath) => {
+          const response = await fetch(`/postData/${postPath}/data.json`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          console.log(response)
+          const data = await response.json();
+          return {
+            ...data,
+            image: `/postData/${postPath}/images/${data.images[0]}`, // Set correct image path
+          };
+        });
+
+        const posts = await Promise.all(postDataPromises);
+        setPostItems(posts);
+      } catch (error) {
+        console.error('Error fetching project data:', error);
+      }
+    };
+
+    fetchPostData();
+  }, []);
+
   return (
     <div className="main-content-area relative">
-      {<NavBox darkMode={darkMode}/>}
-      <h1 className="text-6xl absolute top-4 left-4">Writings</h1>
+      <NavBox darkMode={darkMode} />
+      <h1 className="text-6xl absolute top-4 left-4">Posts</h1>
       <div className="absolute inset-0">
-        <ImageSwiper items={writingItems} darkMode={darkMode} />
+        <ImageSwiper items={postItems} darkMode={darkMode} />
       </div>
     </div>
   );
 }
 
-export default WritingPage;File: components/LoadingSpinner.js
+export default WritingPage;
+File: components/LoadingSpinner.js
 Contents:
 import React from 'react';
 
@@ -971,7 +1002,8 @@ const RightSidebar = ({ darkMode, setDarkMode }) => {
   return (
     <div className="right-sidebar h-full flex items-center justify-center">
       <button 
-        className="transform -rotate-90 origin-center p-2 bg-gray-900 hover:bg-gray-800"
+        className='transform -rotate-90 origin-center p-2'
+        style={{backgroundColor : darkMode ? '#F7F3E3':'#2E242A'}}
         onClick={() => setDarkMode(!darkMode)}
       >
         {darkMode ? '' : ''}
@@ -983,11 +1015,39 @@ const RightSidebar = ({ darkMode, setDarkMode }) => {
 export default RightSidebar;
 File: components/NavBox.js
 Contents:
-// NavBox.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function NavBox({ darkMode }) {
+  useEffect(() => {
+    const addHoverEffect = () => {
+      document.body.classList.add('hovering');
+    };
+
+    const removeHoverEffect = () => {
+      document.body.classList.remove('hovering');
+    };
+
+    const handleClick = () => {
+      document.body.classList.remove('hovering');
+    };
+
+    const navLinks = document.querySelectorAll('.navbar a');
+    navLinks.forEach((el) => {
+      el.addEventListener('mouseover', addHoverEffect);
+      el.addEventListener('mouseout', removeHoverEffect);
+      el.addEventListener('click', handleClick);
+    });
+
+    return () => {
+      navLinks.forEach((el) => {
+        el.removeEventListener('mouseover', addHoverEffect);
+        el.removeEventListener('mouseout', removeHoverEffect);
+        el.removeEventListener('click', handleClick);
+      });
+    };
+  }, []);
+
   return (
     <div className={`navbar fixed top-4 right-4 p-4 ${darkMode ? 'bg-dark text-light border-dark' : 'bg-light text-dark border-light'}`}>
       <nav className="flex flex-col">
@@ -1026,11 +1086,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import NavBox from './NavBox';
 import ImageSwiper2 from './ImageSwiper2';
+import parse from 'html-react-parser';
 
 function ProjectDataPage({ darkMode }) {
   const { projectId } = useParams();
   const [project, setProject] = useState(null);
-  const projectFolderPath = `/projects/${projectId}`;
+  const projectFolderPath = `/projectData/${projectId}`;
 
   useEffect(() => {
     // Fetch project details
@@ -1041,7 +1102,35 @@ function ProjectDataPage({ darkMode }) {
         setProject(data);
       })
       .catch((error) => console.error('Error fetching project data:', error));
-  }, [projectId]);
+  }, [projectId,projectFolderPath]);
+
+  useEffect(() => {
+    const addHoverEffect = () => {
+      document.body.classList.add('hovering');
+    };
+
+    const removeHoverEffect = () => {
+      document.body.classList.remove('hovering');
+    };
+
+    const handleClick = () => {
+      document.body.classList.remove('hovering');
+    };
+
+    document.querySelectorAll('a, button').forEach((el) => {
+      el.addEventListener('mouseover', addHoverEffect);
+      el.addEventListener('mouseout', removeHoverEffect);
+      el.addEventListener('click', handleClick);
+    });
+
+    return () => {
+      document.querySelectorAll('a, button').forEach((el) => {
+        el.removeEventListener('mouseover', addHoverEffect);
+        el.removeEventListener('mouseout', removeHoverEffect);
+        el.removeEventListener('click', handleClick);
+      });
+    };
+  }, []);
 
   if (!project) {
     return <div>Loading...</div>;
@@ -1050,36 +1139,41 @@ function ProjectDataPage({ darkMode }) {
   const projectImages = project.images.map((img) => `${projectFolderPath}/images/${img}`);
   console.log('Project images:', projectImages);
 
+  const links = Object.keys(project.contentLinks).map((k)=> {
+    const v = project.contentLinks[k];
+    const text = `<a href = ${v}> ${k} </a>`;
+    return text
+  });
+
   return (
     <div className={`main-content-area relative ${darkMode ? 'dark-mode' : ''}`}>
-      {<NavBox darkMode={darkMode}/>}
+      <NavBox darkMode={darkMode} />
       <h1 className="text-6xl absolute top-1 left-4 w-1/3">{project.title}</h1>
       <p className="project-info text-2xl absolute top-20 left-4 w-1/3">{project.content}</p>
       <div className="project-images w-1/3 p-4">
-          <ImageSwiper2 items={projectImages} />
+        <ImageSwiper2 items={projectImages} />
       </div>
       <div className="project-additional-info absolute bottom-4 right-4 w-1/3">
-          <div>
-            <h3>Links</h3>
-            <p>{project.contentLinks}</p>
-          </div>
-          <div>
-            <h3>Tags</h3>
-            <p>{project.contentTags}</p>
-          </div>
-          <div>
-            <h3>Additional Info</h3>
-            <p>{project.additionalInfo}</p>
-          </div>
+        <div>
+          <h3>Links</h3>
+          <p>{parse(links.join('</p><p>'))}</p>
+        </div>
+        <div>
+          <h3>Tags</h3>
+          {parse('<p>'+project.contentTags.join('</p><p>')+'</p>')}
+        </div>
+        <div>
+          <h3>Additional Info</h3>
+          <p>{project.additionalInfo}</p>
         </div>
       </div>
+    </div>
   );
 }
 
 export default ProjectDataPage;
 File: components/ImageSwiper.js
 Contents:
-// ImageSwiper.js
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Swiper from 'swiper/bundle';
@@ -1088,6 +1182,7 @@ import './ImageSwiper.css';
 
 const ImageSwiper = ({ items, darkMode }) => {
   useEffect(() => {
+    console.log('Initializing Swiper...');
     const swiper = new Swiper('.swiper-container', {
       loop: true,
       slidesPerView: 'auto',
@@ -1097,6 +1192,7 @@ const ImageSwiper = ({ items, darkMode }) => {
       },
       direction: 'horizontal',
     });
+    void swiper;
 
     const thumbContainers = document.querySelectorAll('.thumbContainer');
     thumbContainers.forEach((container, index) => {
@@ -1107,12 +1203,14 @@ const ImageSwiper = ({ items, darkMode }) => {
       // Add event listeners for hover effects
       container.addEventListener('mouseover', addHoverEffect);
       container.addEventListener('mouseout', removeHoverEffect);
+      container.addEventListener('click', handleClick);
     });
 
     return () => {
       thumbContainers.forEach((container) => {
         container.removeEventListener('mouseover', addHoverEffect);
         container.removeEventListener('mouseout', removeHoverEffect);
+        container.addEventListener('click', handleClick);
       });
     };
   }, [items]);
@@ -1124,6 +1222,10 @@ const ImageSwiper = ({ items, darkMode }) => {
 
   // Function to remove hover effect
   const removeHoverEffect = () => {
+    document.body.classList.remove('hovering');
+  };
+
+  const handleClick = () => {
     document.body.classList.remove('hovering');
   };
 
@@ -1148,6 +1250,7 @@ const ImageSwiper = ({ items, darkMode }) => {
 export default ImageSwiper;
 File: components/ImageSwiper2.js
 Contents:
+// ImageSwiper2.js
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -1160,12 +1263,20 @@ const ImageSwiper2 = ({ items }) => {
       direction="vertical"
       slidesPerView="auto"
       freeMode={true}
+      loop= {true}
       mousewheel={true}
       className="mySwiper2"
     >
       {items.map((item, index) => (
         <SwiperSlide key={index} className="swiper-slide-2">
-          <img src={item} alt={`Project Image ${index + 1}`} />
+          {item.endsWith('.mov') || item.endsWith('.mp4') ? (
+            <video controls>
+              <source src={item} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          ) : (
+            <img src={item} alt={`Project Item ${index + 1}`} />
+          )}
         </SwiperSlide>
       ))}
     </Swiper>
@@ -1176,155 +1287,176 @@ export default ImageSwiper2;
 File: components/ImageSwiper.css
 Contents:
 .swiper-container {
-    width: 100%; /* Use 100% width to fit within the main content area */
-    height: fit-content; /* Use 100% height to fit within the main content area */
-    background: none;
-    margin: 0 auto;
-    overflow: hidden;
-    position: absolute; /* Use absolute positioning */
-    bottom: 0;
-  }
-  
-  .swiper-wrapper {
-    display: flex;
-    align-items: flex-end;
-  }
-  
-  .swiper-slide {
-    display: flex;
-    align-items: flex-end;
-    width: auto;
-    max-width: 300px; /* Ensure max-width does not cause overflow */
-    margin-right: 16px; /* Add margin between slides */
-  }
-  
-  .swiper-slide img {
-    width: 100%;
-    height: auto;
-    max-height: calc(100vh - 250px); /* Ensure image height fits within viewport */
-    border-radius: 8px;
-  }
-  
-  .projectInfo {
-    position: relative;
-    margin: 14px 0 13px 0;
-    text-transform: uppercase;
-  }
-  
-  .projectInfo h2 {
-    margin: 0;
-    font-size: 1rem; /* Adjust font size */
-  }
-  
-  .projectInfo h2.light-mode {
-    color: #2E242A; /* Light mode text color */
-  }
-  
-  .projectInfo h2.dark-mode {
-    color: #F7F3E3; /* Dark mode text color */
-  }
-  
-  .thumbContainer {
-    opacity: 1;
-    transform: translateY(60%);
-    transition: transform 0.5s;
-  }
-  
-  .thumbContainer img,
-  .thumbContainer video {
-    display: block;
-    position: relative;
-    width: 100%; /* Adjust to fit within container */
-    height: auto;
-  }
-  
-  .fadeInSlide {
-    animation-name: fadeInSlide;
-    animation-duration: 1.5s;
-    animation-timing-function: cubic-bezier(1, 0.055, 0.32, 1);
-    animation-fill-mode: forwards;
-  }
-  
-  @keyframes fadeInSlide {
-    0% {
-      transform: translateY(60%);
-    }
-    100% {
-      transform: translateY(0);
-    }
-  }File: components/PostDataPage.js
-Contents:
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import NavBox from './NavBox';
-
-const posts = {
-  'post1': {
-    title: 'Post 1',
-    content: 'Details about post 1.'
-  },
-  'post2': {
-    title: 'Post 2',
-    content: 'Details about post 2.'
-  },
-  // Add more posts here
-};
-
-function PostPage({darkMode}) {
-  const { postId } = useParams();
-  const post = posts[postId] || { title: 'Post not found', content: 'No details available.' };
-
-  return (
-    <div className="container mx-auto p-4 relative">
-      {<NavBox darkMode={darkMode}/>}
-      <h1 className="text-4xl mb-4">{post.title}</h1>
-      <p>{post.content}</p>
-    </div>
-  );
+  width: 100%; /* Use 100% width to fit within the main content area */
+  height: fit-content; /* Use 100% height to fit within the main content area */
+  background: none;
+  margin: 0 auto;
+  overflow: hidden;
+  position: absolute; /* Use absolute positioning */
+  bottom: 0;
 }
 
-export default PostPage;
-File: components/ProjectsPage.js
+.swiper-wrapper {
+  display: flex;
+  align-items: flex-end;
+}
+
+.swiper-slide {
+  display: flex;
+  align-items: flex-end;
+  width: auto;
+  max-width: 300px; /* Ensure max-width does not cause overflow */
+  margin-right: 16px; /* Add margin between slides */
+}
+
+.swiper-slide img {
+  width: 100%;
+  height: auto;
+  max-height: calc(100vh - 250px); /* Ensure image height fits within viewport */
+  border-radius: 8px;
+}
+
+.projectInfo {
+  position: relative;
+  margin: 14px 0 13px 0;
+  text-transform: uppercase;
+}
+
+.projectInfo h2 {
+  margin: 0;
+  font-size: 1rem; /* Adjust font size */
+}
+
+.projectInfo h2.light-mode {
+  color: #2E242A; /* Light mode text color */
+}
+
+.projectInfo h2.dark-mode {
+  color: #F7F3E3; /* Dark mode text color */
+}
+
+.thumbContainer {
+  opacity: 1;
+  transform: translateY(60%);
+  transition: transform 0.5s;
+}
+
+.thumbContainer img,
+.thumbContainer video {
+  display: block;
+  position: relative;
+  width: 100%; /* Adjust to fit within container */
+  height: auto;
+}
+
+.fadeInSlide {
+  animation-name: fadeInSlide;
+  animation-duration: 1.5s;
+  animation-timing-function: cubic-bezier(1, 0.055, 0.32, 1);
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInSlide {
+  0% {
+      transform: translateY(60%);
+  }
+  100% {
+      transform: translateY(0);
+  }
+}
+File: components/PostDataPage.js
 Contents:
-/*import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import NavBox from './NavBox';
-import ImageSwiper from './ImageSwiper';
-import image1 from '../logo512.jpg';
+import ImageSwiper2 from './ImageSwiper2';
+import parse from 'html-react-parser';
 
-const projectItems = [
-  { title: 'Project 1', image: image1, link: '/projects/project1' },
-  { title: 'Project 2', image: image1, link: '/projects/project2' },
-  { title: 'Project 3', image: image1, link: '/projects/project1' },
-  { title: 'Project 4', image: image1, link: '/projects/project1' },
-  { title: 'Project 5', image: image1, link: '/projects/project1' },
-  { title: 'Project 6', image: image1, link: '/projects/project1' },
-  { title: 'Project 7', image: image1, link: '/projects/project1' },
-  { title: 'Project 8', image: image1, link: '/projects/project1' },
-  { title: 'Project 9', image: image1, link: '/projects/project1' },
+function PostDataPage({ darkMode }) {
+  const { postId } = useParams();
+  const [post, setPost] = useState(null);
+  const postFolderPath = `/postData/${postId}`;
 
-  // Add more project items here
-];
+  useEffect(() => {
+    // Fetch post details
+    fetch(`${postFolderPath}/data.json`)
+      .then((response) => {console.log(response); return response.json()})
+      .then((data) => {
+        console.log('Fetched post data:', data);
+        setPost(data);
+      })
+      .catch((error) => console.error('Error fetching post data:', error));
+  }, [postId,postFolderPath]);
 
-function ProjectsPage({ darkMode }) {
+  useEffect(() => {
+    const addHoverEffect = () => {
+      document.body.classList.add('hovering');
+    };
+
+    const removeHoverEffect = () => {
+      document.body.classList.remove('hovering');
+    };
+
+    const handleClick = () => {
+      document.body.classList.remove('hovering');
+    };
+
+    document.querySelectorAll('a, button').forEach((el) => {
+      el.addEventListener('mouseover', addHoverEffect);
+      el.addEventListener('mouseout', removeHoverEffect);
+      el.addEventListener('click', handleClick);
+    });
+
+    return () => {
+      document.querySelectorAll('a, button').forEach((el) => {
+        el.removeEventListener('mouseover', addHoverEffect);
+        el.removeEventListener('mouseout', removeHoverEffect);
+        el.removeEventListener('click', handleClick);
+      });
+    };
+  }, []);
+
+  if (!post) {
+    return <div>Loading...</div>;
+  }
+
+
+
+  const links = Object.keys(post.contentLinks).map((k)=> {
+    const v = post.contentLinks[k];
+    const text = `<a href = ${v}> ${k} </a>`;
+    return text
+  });
+
   return (
-    <div className="main-content-area relative">
-      {<NavBox darkMode={darkMode}/>}
-      <h1 className="text-6xl absolute top-4 left-4">Projects</h1>
-      <div className="absolute inset-0">
-        <ImageSwiper items={projectItems} darkMode={darkMode} />
+    <div className={`main-content-area relative ${darkMode ? 'dark-mode' : ''}`}>
+      <NavBox darkMode={darkMode} />
+      <h1 className="text-6xl absolute top-1 left-4 w-1/3">{post.title}</h1>
+      <p className="project-info text-2xl absolute top-20 left-4 w-1/3">{post.content}</p>
+      <div className="project-additional-info absolute bottom-4 right-4 w-1/3">
+        <div>
+          <h3>Links</h3>
+          <p>{parse(links.join('</p><p>'))}</p>
+        </div>
+        <div>
+          <h3>Tags</h3>
+          {parse('<p>'+post.contentTags.join('</p><p>')+'</p>')}
+        </div>
+        <div>
+          <h3>Additional Info</h3>
+          <p>{post.additionalInfo}</p>
+        </div>
       </div>
     </div>
   );
 }
 
-export default ProjectsPage;
-*/
-
-// ProjectsPage.js
+export default PostDataPage;
+File: components/ProjectsPage.js
+Contents:
 import React, { useEffect, useState } from 'react';
 import NavBox from './NavBox';
 import ImageSwiper from './ImageSwiper';
-
 
 function ProjectsPage({ darkMode }) {
   const [projectItems, setProjectItems] = useState([]);
@@ -1332,13 +1464,17 @@ function ProjectsPage({ darkMode }) {
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
-        const projectPaths = ['stagira','stagira copy','stagira copy 2','stagira copy 3','stagira copy 4','stagira copy 5','stagira copy 6','stagira copy 7','stagira copy 8']; // Add all project folders here or dynamically fetch them if possible
+        const projectPaths = ['Orbisol','Keraunos','SIER']; // Ensure this matches the folder name exactly
         const projectDataPromises = projectPaths.map(async (projectPath) => {
-          const response = await fetch(`/projects/${projectPath}/data.json`);
+          const response = await fetch(`/projectData/${projectPath}/data.json`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          console.log(response)
           const data = await response.json();
           return {
             ...data,
-            image: `/projects/${projectPath}/images/${data.images[0]}`, // Set correct image path
+            image: `/projectData/${projectPath}/images/${data.images[0]}`, // Set correct image path
           };
         });
 
@@ -1354,7 +1490,7 @@ function ProjectsPage({ darkMode }) {
 
   return (
     <div className="main-content-area relative">
-      {<NavBox darkMode={darkMode} />}
+      <NavBox darkMode={darkMode} />
       <h1 className="text-6xl absolute top-4 left-4">Projects</h1>
       <div className="absolute inset-0">
         <ImageSwiper items={projectItems} darkMode={darkMode} />
