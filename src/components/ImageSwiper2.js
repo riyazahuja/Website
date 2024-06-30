@@ -23,7 +23,7 @@ const ImageSwiper2 = ({ items }) => {
               Your browser does not support the video tag.
             </video>
           ) : (
-            <img src={item} alt={`Project Image ${index + 1}`} />
+            <img src={item} alt={`Project Item ${index + 1}`} />
           )}
         </SwiperSlide>
       ))}

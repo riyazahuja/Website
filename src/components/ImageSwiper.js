@@ -16,6 +16,7 @@ const ImageSwiper = ({ items, darkMode }) => {
       },
       direction: 'horizontal',
     });
+    void swiper;
 
     const thumbContainers = document.querySelectorAll('.thumbContainer');
     thumbContainers.forEach((container, index) => {

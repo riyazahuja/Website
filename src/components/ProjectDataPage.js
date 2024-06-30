@@ -18,7 +18,7 @@ function ProjectDataPage({ darkMode }) {
         setProject(data);
       })
       .catch((error) => console.error('Error fetching project data:', error));
-  }, [projectId]);
+  }, [projectId,projectFolderPath]);
 
   useEffect(() => {
     const addHoverEffect = () => {
