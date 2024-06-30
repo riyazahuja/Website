@@ -6,11 +6,12 @@ const CanvasAnimation = ({ darkMode }) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
+    let animationFrameId;
 
     const resizeCanvas = () => {
       const sidebarWidth = 25; // Width of the sidebars
       const headerFooterHeight = 35; // Height of the header and footer
-      
+
       // Set canvas dimensions taking into account the sidebars and header/footer
       canvas.width = (window.innerWidth - sidebarWidth * 2) * window.devicePixelRatio;
       canvas.height = (window.innerHeight - headerFooterHeight * 2) * window.devicePixelRatio;
@@ -45,7 +46,6 @@ const CanvasAnimation = ({ darkMode }) => {
       draw() {
         this.ctx.beginPath();
         this.ctx.fillRect(this.x, this.y, this.size, this.size);
-
       }
 
       update() {
@@ -89,8 +89,8 @@ const CanvasAnimation = ({ darkMode }) => {
       }
 
       handleMouseMove(e) {
-        this.mouse.x = e.clientX * window.devicePixelRatio -50;
-        this.mouse.y = e.pageY * window.devicePixelRatio-60;
+        this.mouse.x = e.clientX * window.devicePixelRatio - 50;
+        this.mouse.y = e.pageY * window.devicePixelRatio - 60;
         this.mouse.radius = 10000;
 
         clearTimeout(this.mouseTimer);
@@ -121,20 +121,25 @@ const CanvasAnimation = ({ darkMode }) => {
           this.particlesArray[i].update();
         }
       }
+
+      cleanup() {
+        window.removeEventListener('mousemove', this.handleMouseMove.bind(this));
+        window.removeEventListener('resize', this.handleResize.bind(this));
+      }
     }
 
     const effect = new Effect(canvas.width, canvas.height, ctx);
 
     const animate = () => {
       effect.update();
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
     };
 
     animate();
 
     return () => {
-      window.removeEventListener('resize', effect.handleResize);
-      window.removeEventListener('mousemove', effect.handleMouseMove);
+      cancelAnimationFrame(animationFrameId);
+      effect.cleanup();
     };
   }, [darkMode]);
 
