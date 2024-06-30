@@ -34,7 +34,7 @@ function App() {
                 setHoverInfo(["This is the info page", "This is the second element of the info page", "This is the third element of the info page"]);
                 break;
             case '/':
-              setHoverInfo(["Hello my name is Riyaz Ahuja and this is my website!"]);
+              setHoverInfo(["TESTING"]);
               break;
             default:
               const raw = location.pathname.split('/')
@@ -102,9 +102,9 @@ function App() {
         <div className="flex min-h-screen">
             <CanvasAnimation darkMode={darkMode} />
             <LeftSidebar darkMode={darkMode} />
-            <div className="main-content flex flex-col relative z-10">
+            <div className="main-content"/* flex flex-col relative z-10 */>
                 <Header hoverInfo={hoverInfo} darkMode={darkMode} />
-                <main className="flex-grow p-4">
+                <main className="body-wrapper">
                             <Routes location={location}>
                                 <Route path="/" element={<HomePage darkMode={darkMode} />} />
                                 <Route path="/projects" element={<ProjectsPage darkMode={darkMode} />} />

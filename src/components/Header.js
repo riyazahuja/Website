@@ -19,7 +19,7 @@ Border: 293D38
 
 function Header({ hoverInfo }) {
   return (
-    <header className="headfoot p-4 relative">
+    <header className="headfoot">
       <HoverInfo info={hoverInfo} direction="top" />
     </header>
   );

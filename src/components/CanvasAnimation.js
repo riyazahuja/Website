@@ -10,7 +10,7 @@ const CanvasAnimation = ({ darkMode }) => {
 
     const resizeCanvas = () => {
       const sidebarWidth = 25; // Width of the sidebars
-      const headerFooterHeight = 35; // Height of the header and footer
+      const headerFooterHeight = 25; // Height of the header and footer
 
       // Set canvas dimensions taking into account the sidebars and header/footer
       canvas.width = (window.innerWidth - sidebarWidth * 2) * window.devicePixelRatio;
@@ -144,7 +144,7 @@ const CanvasAnimation = ({ darkMode }) => {
   }, [darkMode]);
 
   return (
-    <div style={{ position: 'absolute', top: '35px', bottom: '35px', left: '25px', right: '25px' }}>
+    <div style={{ position: 'absolute', top: '25px', bottom: '25px', left: '25px', right: '25px' }}>
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%' }} />
     </div>
   );

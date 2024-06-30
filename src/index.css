@@ -89,9 +89,9 @@ html, body, #root {
 }
 
 .left-sidebar, .right-sidebar {
-  width: 27px; /* Make the sidebars skinnier */
-  height: 100vh; /* Full height of the viewport */
-  position: fixed;
+  width: 25px; 
+  height: 100vh; 
+  position: relative;
   top: 0;
   background-color: rgba(0, 0, 0, 0);
   color: #2E242A;
@@ -100,7 +100,7 @@ html, body, #root {
 
 body.dark-mode .left-sidebar, 
 body.dark-mode .right-sidebar {
-  width: 26px; /* Make the sidebars skinnier */
+  width: 25px; /* Make the sidebars skinnier */
   color: #F7F3E3;
   border: 1px solid #F7F3E3;
 }
@@ -111,26 +111,32 @@ body.dark-mode .right-sidebar {
 
 .right-sidebar {
   right: 0;
+  width: 25px;
 }
 
 .main-content {
-  margin-left: 25px; /* Adjust for left sidebar */
-  margin-right: 25px; /* Adjust for right sidebar */
-  width: calc(100% - 50px); /* Adjust for sidebars */
+  /* margin-left: 25px; 
+  margin-right: 25px; */
+  width: 100%;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.body-wrapper {
+  flex-grow: 1;
 }
 
 .main-content-area {
-  position: absolute; /* Use absolute positioning */
-  top: 25px; /* Start below the header */
-  bottom: 25px; /* End above the footer */
+  position: relative;
+  width: 100%;
+  height: 100%;
+  top: 0; /* Start below the header */
+  bottom: 0; /* End above the footer */
   left: 0;
   right: 0;
-  margin: 10px;
+  padding: 5px;
   overflow: hidden;
-  width: calc(100% - 20px); /* Adjust width to fit between sidebars */
-  height: calc(100%-50px); /* Adjust height to fit between header and footer */
-  /* margin-top: 42.5vh; */
   z-index: 1;
 }
 
@@ -144,7 +150,7 @@ body.dark-mode .right-sidebar {
 
 /* Project info section */
 .project-info {
-  height: calc(100%-35px);
+  height: calc(100%-25px);
   overflow-y: auto;
 }
 
@@ -217,7 +223,8 @@ body.dark-mode .right-sidebar {
 .headfoot {
   background-color: rgba(0, 0, 0, 0);
   color: #2E242A;
-  border: 2px solid #2E242A;
+  border: 2px #2E242A;
+  border-style: solid none;
   height: 25px;
 }
 
@@ -228,7 +235,8 @@ body.dark-mode .headfoot {
 
 .hover-info {
   width: 100%; /* Adjust for sidebars */
-  display: flex;
+  height: 25px;
+  /* display: flex; */
   overflow: hidden;
   white-space: nowrap;
   background: rgba(0, 0, 0, 0);
@@ -237,28 +245,29 @@ body.dark-mode .headfoot {
 
 .hover-info.top {
   top: 0;
-  margin-top: -1%;
+  
 }
 
 .hover-info.bottom {
   bottom: 0;
-  margin-top: -1%;
 }
 
 .hover-info.top .hover-info-content {
-  white-space: nowrap;
-  overflow: hidden;
+  /* white-space: nowrap;
+  overflow: hidden;*/
   display: inline-block;
   animation: marquee-right 10s linear infinite;
   padding-right: 100%;
+  height: 100%;
 }
 
 .hover-info.bottom .hover-info-content {
-  white-space: nowrap;
-  overflow: hidden;
+   /* white-space: nowrap;
+  overflow: hidden;*/
   display: inline-block;
   animation: marquee-left 10s linear infinite;
   padding-right: 100%;
+  height: 100%;
 }
 
 .hover-info-content-2 {
@@ -298,6 +307,8 @@ body {
 }
 
 /* Base styles for the custom cursor */
+
+
 .cursor {
   position: absolute;
   top: 0;
@@ -327,6 +338,16 @@ body {
   animation: pulse 1.5s infinite;
   transition: width 0.3s ease, height 0.3s ease, border 0.3s ease, opacity 0.3s ease;
 }
+
+@media only screen and (max-device-width: 768px) {
+
+  .cursor,.cursor-pulse {
+    display: none;
+  }
+}
+
+
+
 
 /* Animation for pulsing effect */
 @keyframes pulse {
